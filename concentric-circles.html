@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+
+        div.square {
+            background-color: red;
+            height: 25vh;
+            width: 25vh;
+
+            float: left;
+            margin: 1em;
+
+            border-radius: 50%;
+        }
+
+        div.square > div {
+            margin: 15%;
+            height: 70%;
+            width: 70%;
+            background-color: darkred;
+            border-radius: 50%;
+
+            overflow: hidden;
+        }
+
+        div.square div.quadrant {
+            width: 50%;
+            height: 50%;
+            float: left;
+        }
+
+        div.quadrant:nth-child(1) { background-color: green; }
+        div.quadrant:nth-child(2) { background-color: darkblue; }
+        div.quadrant:nth-child(3) { background-color: yellow; }
+        div.quadrant:nth-child(4) { background-color: yellowgreen; }
+
+    </style>
+</head>
+<body>
+When a system does not correctly manage its memory allocations, it is said to leak memory. A memory leak is a bug. Symptoms can include reduced performance and failure.
+
+Microsoft's Internet Explorer contains a number of leaks, the worst of which is an interaction with JScript. When a DOM object contains a reference to a JavaScript object (such an event handling function), and when that JavaScript object contains a reference to that DOM object, then a cyclic structure is formed. This is not in itself a problem. At such time as there are no other references to the DOM object and the event handler, then the garbage collector (an automatic memory resource manager) will reclaim them both, allowing their space to be reallocated. The JavaScript garbage collector understands about cycles and is not confused by them. Unfortunately, IE's DOM is not managed by JScript. It has its own memory manager that does not understand about cycles and so gets very confused. As a result, when cycles occur, memory reclamation does not occur. The memory that is not reclaimed is said to have leaked. Over time, this can result in memory starvation. In a memory space full of used cells, the browser starves to death.
+
+We can demonstrate this. In the first program, queuetest1, we will create 10000 DOM elements (spans), and at the same time, delete all but the 10 most recent. When you run it with the Windows Task Manager's Performance display, you will observe that PF (Page File) Usage remains fairly constant. Changes on PF Usage can be an indicator of memory allocation inefficiency.
+<div class="square">
+    <div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+        <div class="quadrant"></div>
+    </div>
+</div>
+Next, run the second program, queuetest2. It does the same thing as queuetest1, except that it adds a click handler to each element. On Mozilla and Opera, the PF Usage is about the same, but on IE we see a steady increase as memory leaks away at a rate of about a megabyte per second. Often this leakage is unnoticable. But as Ajax techniques become more popular, with pages staying in place longer, being subjected to many changes, failure becomes common.
+
+Since IE is unable to do its job and reclaim the cycles, it falls on us to do it. If we explicitly break the cycles, then IE will be able to reclaim the memory. According to Microsoft, closures are the cause of memory leaks. This is of course deeply wrong, but it leads to Microsoft giving very bad advice to programmers on how to cope with Microsoft's bugs. It turns out that it is easy to break the cycles on the DOM side. It is virtually impossible to break them on the JScript side.
+
+When we are done with an element, we must null out all of its event handlers to break the cycles. All we have to do is assign null to each event handler's property. This can be done very specifically, or we can make a generic purge function.
+
+The purge function takes a reference to a DOM element as an argument. It loops through the element's attributes. If it finds any functions, it nulls them out. This breaks the cycle, allowing memory to be reclaimed. It will also look at all of the element's descendent elements, and clear out all of their cycles as well. The purge function is harmless on Mozilla and Opera. It is essential on IE. The purge function should be called before removing any element, either by the removeChild method, or by setting the innerHTML property.When a system does not correctly manage its memory allocations, it is said to leak memory. A memory leak is a bug. Symptoms can include reduced performance and failure.
+
+Microsoft's Internet Explorer contains a number of leaks, the worst of which is an interaction with JScript. When a DOM object contains a reference to a JavaScript object (such an event handling function), and when that JavaScript object contains a reference to that DOM object, then a cyclic structure is formed. This is not in itself a problem. At such time as there are no other references to the DOM object and the event handler, then the garbage collector (an automatic memory resource manager) will reclaim them both, allowing their space to be reallocated. The JavaScript garbage collector understands about cycles and is not confused by them. Unfortunately, IE's DOM is not managed by JScript. It has its own memory manager that does not understand about cycles and so gets very confused. As a result, when cycles occur, memory reclamation does not occur. The memory that is not reclaimed is said to have leaked. Over time, this can result in memory starvation. In a memory space full of used cells, the browser starves to death.
+
+We can demonstrate this. In the first program, queuetest1, we will create 10000 DOM elements (spans), and at the same time, delete all but the 10 most recent. When you run it with the Windows Task Manager's Performance display, you will observe that PF (Page File) Usage remains fairly constant. Changes on PF Usage can be an indicator of memory allocation inefficiency.
+
+Next, run the second program, queuetest2. It does the same thing as queuetest1, except that it adds a click handler to each element. On Mozilla and Opera, the PF Usage is about the same, but on IE we see a steady increase as memory leaks away at a rate of about a megabyte per second. Often this leakage is unnoticable. But as Ajax techniques become more popular, with pages staying in place longer, being subjected to many changes, failure becomes common.
+
+Since IE is unable to do its job and reclaim the cycles, it falls on us to do it. If we explicitly break the cycles, then IE will be able to reclaim the memory. According to Microsoft, closures are the cause of memory leaks. This is of course deeply wrong, but it leads to Microsoft giving very bad advice to programmers on how to cope with Microsoft's bugs. It turns out that it is easy to break the cycles on the DOM side. It is virtually impossible to break them on the JScript side.
+
+When we are done with an element, we must null out all of its event handlers to break the cycles. All we have to do is assign null to each event handler's property. This can be done very specifically, or we can make a generic purge function.
+
+The purge function takes a reference to a DOM element as an argument. It loops through the element's attributes. If it finds any functions, it nulls them out. This breaks the cycle, allowing memory to be reclaimed. It will also look at all of the element's descendent elements, and clear out all of their cycles as well. The purge function is harmless on Mozilla and Opera. It is essential on IE. The purge function should be called before removing any element, either by the removeChild method, or by setting the innerHTML property.When a system does not correctly manage its memory allocations, it is said to leak memory. A memory leak is a bug. Symptoms can include reduced performance and failure.
+
+Microsoft's Internet Explorer contains a number of leaks, the worst of which is an interaction with JScript. When a DOM object contains a reference to a JavaScript object (such an event handling function), and when that JavaScript object contains a reference to that DOM object, then a cyclic structure is formed. This is not in itself a problem. At such time as there are no other references to the DOM object and the event handler, then the garbage collector (an automatic memory resource manager) will reclaim them both, allowing their space to be reallocated. The JavaScript garbage collector understands about cycles and is not confused by them. Unfortunately, IE's DOM is not managed by JScript. It has its own memory manager that does not understand about cycles and so gets very confused. As a result, when cycles occur, memory reclamation does not occur. The memory that is not reclaimed is said to have leaked. Over time, this can result in memory starvation. In a memory space full of used cells, the browser starves to death.
+
+We can demonstrate this. In the first program, queuetest1, we will create 10000 DOM elements (spans), and at the same time, delete all but the 10 most recent. When you run it with the Windows Task Manager's Performance display, you will observe that PF (Page File) Usage remains fairly constant. Changes on PF Usage can be an indicator of memory allocation inefficiency.
+
+Next, run the second program, queuetest2. It does the same thing as queuetest1, except that it adds a click handler to each element. On Mozilla and Opera, the PF Usage is about the same, but on IE we see a steady increase as memory leaks away at a rate of about a megabyte per second. Often this leakage is unnoticable. But as Ajax techniques become more popular, with pages staying in place longer, being subjected to many changes, failure becomes common.
+
+Since IE is unable to do its job and reclaim the cycles, it falls on us to do it. If we explicitly break the cycles, then IE will be able to reclaim the memory. According to Microsoft, closures are the cause of memory leaks. This is of course deeply wrong, but it leads to Microsoft giving very bad advice to programmers on how to cope with Microsoft's bugs. It turns out that it is easy to break the cycles on the DOM side. It is virtually impossible to break them on the JScript side.
+
+When we are done with an element, we must null out all of its event handlers to break the cycles. All we have to do is assign null to each event handler's property. This can be done very specifically, or we can make a generic purge function.
+
+The purge function takes a reference to a DOM element as an argument. It loops through the element's attributes. If it finds any functions, it nulls them out. This breaks the cycle, allowing memory to be reclaimed. It will also look at all of the element's descendent elements, and clear out all of their cycles as well. The purge function is harmless on Mozilla and Opera. It is essential on IE. The purge function should be called before removing any element, either by the removeChild method, or by setting the innerHTML property.
+</body>
+</html>
