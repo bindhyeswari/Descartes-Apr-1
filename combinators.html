@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+
+        div p {
+            background-color: red;
+            color: white;
+            font: 200 1em 'Helvetica Neue';
+        }
+
+
+        li.first + li {
+            background-color: green;
+        }
+
+        li:first-child {
+            background-color: red;
+        }
+
+        body, p { /* Grouping */
+            font: 300 2em 'Helvetica Neue';
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <nav>
+            <p> nested </p>
+        </nav>
+    </div>
+    <p> Basic </p>
+
+    <ul>
+        <li>Aditya</li>
+        <li class="first">Nina</li>
+        <li>Lakshmi</li>
+        <li>Raymond</li>
+    </ul>
+</body>
+</html>

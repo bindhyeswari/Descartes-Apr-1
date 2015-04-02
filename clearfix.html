@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+
+        div.info {
+            background-color: red;
+            font: 200 1.5em 'Helvetica Neue';
+            color: white;
+            padding: 1em 2em 3em;
+            border: 5px solid darkred;
+            /*margin: 1em;*/
+
+            width: 10em;
+            float: left;
+
+        }
+
+        div.parent {
+            border: 5px solid #ff4c17;
+        }
+
+        div.parent::after {
+            content: '';
+            display: block;
+            background-color: green;
+            padding: 1em;
+            clear: both;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="ancestor">
+    <div class="parent">
+        <div class="info">
+            Hello World!
+        </div>
+        <div class="info">
+            Hello World!
+        </div>
+    </div>
+</div>
+</body>
+</html>
